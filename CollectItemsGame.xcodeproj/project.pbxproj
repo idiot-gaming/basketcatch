@@ -15,6 +15,8 @@
 		D5F4D65622AC4DCC00EFC805 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D5F4D65422AC4DCC00EFC805 /* Main.storyboard */; };
 		D5F4D65822AC4DCE00EFC805 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D5F4D65722AC4DCE00EFC805 /* Assets.xcassets */; };
 		D5F4D65B22AC4DCE00EFC805 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D5F4D65922AC4DCE00EFC805 /* LaunchScreen.storyboard */; };
+		D5F4D66322AC4E1800EFC805 /* MainMenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F4D66222AC4E1800EFC805 /* MainMenuScene.swift */; };
+		D5F4D66522AC4E3E00EFC805 /* MainMenuScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = D5F4D66422AC4E3E00EFC805 /* MainMenuScene.sks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +30,8 @@
 		D5F4D65722AC4DCE00EFC805 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D5F4D65A22AC4DCE00EFC805 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D5F4D65C22AC4DCE00EFC805 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D5F4D66222AC4E1800EFC805 /* MainMenuScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuScene.swift; sourceTree = "<group>"; };
+		D5F4D66422AC4E3E00EFC805 /* MainMenuScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MainMenuScene.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,7 +67,9 @@
 				D5F4D64A22AC4DCC00EFC805 /* AppDelegate.swift */,
 				D5F4D64C22AC4DCC00EFC805 /* GameScene.sks */,
 				D5F4D64E22AC4DCC00EFC805 /* Actions.sks */,
+				D5F4D66422AC4E3E00EFC805 /* MainMenuScene.sks */,
 				D5F4D65022AC4DCC00EFC805 /* GameScene.swift */,
+				D5F4D66222AC4E1800EFC805 /* MainMenuScene.swift */,
 				D5F4D65222AC4DCC00EFC805 /* GameViewController.swift */,
 				D5F4D65422AC4DCC00EFC805 /* Main.storyboard */,
 				D5F4D65722AC4DCE00EFC805 /* Assets.xcassets */,
@@ -135,6 +141,7 @@
 				D5F4D64D22AC4DCC00EFC805 /* GameScene.sks in Resources */,
 				D5F4D65822AC4DCE00EFC805 /* Assets.xcassets in Resources */,
 				D5F4D65B22AC4DCE00EFC805 /* LaunchScreen.storyboard in Resources */,
+				D5F4D66522AC4E3E00EFC805 /* MainMenuScene.sks in Resources */,
 				D5F4D64F22AC4DCC00EFC805 /* Actions.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -148,6 +155,7 @@
 			files = (
 				D5F4D65122AC4DCC00EFC805 /* GameScene.swift in Sources */,
 				D5F4D65322AC4DCC00EFC805 /* GameViewController.swift in Sources */,
+				D5F4D66322AC4E1800EFC805 /* MainMenuScene.swift in Sources */,
 				D5F4D64B22AC4DCC00EFC805 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

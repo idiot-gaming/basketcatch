@@ -11,6 +11,7 @@ import GameplayKit
 
 class GameScene: SKScene {
     var player: SKSpriteNode!
+    var isFingerOnPlayer = false
     
     override func didMove(to view: SKView) {
         initializeUI()
@@ -20,6 +21,37 @@ class GameScene: SKScene {
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let touch = touches.first
+        let location = touch!.location(in: self)
+        
+        if let body = physicsWorld.body(at: location) {
+            if body.node!.name == player.name {
+                print("touched player")
+                isFingerOnPlayer = true
+            }
+        }
+    }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if isFingerOnPlayer {
+            let touch = touches.first
+            let currLocation = touch!.location(in: self)
+            let prevLocation = touch!.previousLocation(in: self)
+            let player = childNode(withName: "player") as! SKSpriteNode
+            var playerX = player.position.x + (currLocation.x - prevLocation.x)
+            
+            playerX = max(playerX, player.size.width/2)
+            playerX = min(playerX, size.width - player.size.width/2)
+            
+            player.position = CGPoint(x: playerX, y: player.position.y)
+        }
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        isFingerOnPlayer = false
     }
     
     func initializeUI() {
@@ -44,6 +76,8 @@ class GameScene: SKScene {
         player.position = CGPoint(x: size.width / 2, y: (size.height / 2) - 225)
         // Set the player's position to be in the foreground rather than background
         player.zPosition = 1
+        // Set the player's name for identification
+        player.name = "player"
         // Add physics body to the player to interact with other objects
         player.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: player.size.width, height: player.size.height))
         // Turn off gravity for the player so he doesn't fall through the ground

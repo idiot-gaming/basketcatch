@@ -12,6 +12,7 @@ import SpriteKit
 class MainMenuScene: SKScene {
     var playButton: SKShapeNode!
     var gameLogo: SKLabelNode!
+    var tutorialButton: SKLabelNode!
     
     override func didMove(to view: SKView) {
         loadMainMenu()
@@ -21,8 +22,12 @@ class MainMenuScene: SKScene {
         for touch in touches {
             let location = touch.location(in: self)
             if playButton.contains(location) {
-                print("contains")
+                print("play")
                 self.startGame()
+            }
+            else if tutorialButton.contains(location) {
+                print("tutorial")
+                self.startTutorial()
             }
         }
     }
@@ -38,7 +43,7 @@ class MainMenuScene: SKScene {
         playButton = SKShapeNode(path: path)
         playButton.zPosition = 1
         playButton.name = "play-button"
-        playButton.position = CGPoint(x: 0, y: -50)
+        playButton.position = CGPoint(x: 0, y: -200)
         playButton.fillColor = SKColor.cyan
         self.addChild(playButton)
         
@@ -49,6 +54,13 @@ class MainMenuScene: SKScene {
         gameLogo.fontColor = SKColor.black
         self.addChild(gameLogo)
         
+        tutorialButton = SKLabelNode(fontNamed: "ArialRoundedMTBold")
+        tutorialButton.zPosition = 1
+        tutorialButton.position = CGPoint(x: 0, y: -75)
+        tutorialButton.text = "Play Tutorial"
+        tutorialButton.fontColor = SKColor.green
+        self.addChild(tutorialButton)
+        
         self.backgroundColor = SKColor.white
     }
     
@@ -56,6 +68,12 @@ class MainMenuScene: SKScene {
         let gameScene = GameScene(size: view!.bounds.size)
         let transition = SKTransition.fade(withDuration: 1)
         view!.presentScene(gameScene, transition: transition)
+    }
+    
+    private func startTutorial() {
+        let tutorialScene = TutorialScene(size: view!.bounds.size)
+        let transition = SKTransition.fade(withDuration: 1)
+        view!.presentScene(tutorialScene, transition: transition)
     }
     
     override func update(_ currentTime: TimeInterval) {

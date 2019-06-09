@@ -140,7 +140,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func setUpPhysics() {
         physicsWorld.contactDelegate = self
-        physicsWorld.gravity = CGVector(dx: 0.0, dy: -2.0)
+        physicsWorld.gravity = CGVector(dx: 0.0, dy: -3.0)
         physicsWorld.speed = 1.0
     }
     
@@ -221,7 +221,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let wait = SKAction.wait(forDuration: fruitDuration, withRange: 2)
         let spawn = SKAction.run {
             let fruit = Fruit(color: SKColor.yellow, size: CGSize(width: 40, height: 40))
-            let xRange = 0...self.size.width
+            let xRange = 40...(self.size.width - 40)
             let xPos = CGFloat.random(in: xRange)
             fruit.position = CGPoint(x: xPos, y: self.size.height)
             self.addChild(fruit)
@@ -235,7 +235,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let wait = SKAction.wait(forDuration: rottenDuration, withRange: 2)
         let spawn = SKAction.run {
             let rotten = Rotten(color: SKColor.black, size: CGSize(width: 40, height: 40))
-            let xRange = 0...self.size.width
+            let xRange = 40...(self.size.width - 40)
             let xPos = CGFloat.random(in: xRange)
             rotten.position = CGPoint(x: xPos, y: self.size.height)
             self.addChild(rotten)

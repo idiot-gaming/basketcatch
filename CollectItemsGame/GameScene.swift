@@ -83,8 +83,8 @@ class GameScene: SKScene {
     func initializePlayer() {
         // Load up player asset as brown rectangle
         player = SKSpriteNode(color: SKColor.brown, size: CGSize(width: 40, height: 100))
-        // Set the player's initial position
-        player.position = CGPoint(x: size.width / 2, y: (size.height / 2) - 225)
+        // Set the player's initial position and anchor point
+        player.position = CGPoint(x: size.width / 2, y: 225)
         // Set the player's position to be in the foreground rather than background
         player.zPosition = 1
         // Set the player's name for identification

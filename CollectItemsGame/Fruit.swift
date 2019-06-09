@@ -34,9 +34,9 @@ class Fruit: SKSpriteNode {
         self.physicsBody?.restitution = 0.0
         // Make sure that the sprites are rotating as they fall
         self.physicsBody?.angularVelocity = 10.0
-        
-        self.physicsBody?.categoryBitMask = 2
-        self.physicsBody?.collisionBitMask = 0
+        // Add the physics category to it
+        self.physicsBody?.categoryBitMask = PhysicsCategory.fruit.rawValue
+        self.physicsBody?.contactTestBitMask = 9
         // Give a name to the fruit node
         self.name = "fruit"
         // Put it farthest in the foreground

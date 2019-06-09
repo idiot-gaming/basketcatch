@@ -12,11 +12,13 @@ import GameplayKit
 class GameScene: SKScene {
     var player: SKSpriteNode!
     var isFingerOnPlayer = false
+    var lives = 3
     
     override func didMove(to view: SKView) {
         initializeUI()
         initializeBackground()
         initializePlayer()
+        startSpawner()
     }
     
     override func update(_ currentTime: TimeInterval) {
@@ -99,5 +101,24 @@ class GameScene: SKScene {
         player.physicsBody?.friction = 0.0
         // Add the player to the scene
         self.addChild(player)
+    }
+    
+    func startSpawner() {
+        spawnFruit()
+    }
+    
+    private func spawnFruit() {
+        let wait = SKAction.wait(forDuration: 10, withRange: 5)
+        let spawn = SKAction.run {
+            let fruit = Fruit(color: SKColor.yellow, size: CGSize(width: 20, height: 20))
+            let xRange = 0...self.size.width
+            let xPos = CGFloat.random(in: xRange)
+            fruit.position = CGPoint(x: xPos, y: self.size.height + 100)
+        }
+        
+        let sequence = SKAction.sequence([wait,spawn])
+        if lives < 0 {
+            self.run(sequence)
+        }
     }
 }

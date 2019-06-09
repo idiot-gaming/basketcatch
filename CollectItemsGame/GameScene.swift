@@ -11,14 +11,15 @@ import GameplayKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     var player: SKSpriteNode!
-    var fruit: SKSpriteNode!
-    var rotten: SKSpriteNode!
+    var fruit: Fruit!
+    var rotten: Rotten!
     var isFingerOnPlayer = false
     var lives = 3
     var numCapFruits = 0
     var currentScore: SKLabelNode!
     var livesLabel: SKLabelNode!
-    var duration = 5.0
+    var fruitDuration = 5.0
+    var rottenDuration = 7.0
     
     override func didMove(to view: SKView) {
         setUpPhysics()
@@ -30,6 +31,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
+        if lives == 0 {
+            // End the game and return to main menu
+            let mainMenuScene = MainMenuScene(fileNamed: "MainMenuScene")!
+            let transition = SKTransition.fade(withDuration: 2)
+            view!.presentScene(mainMenuScene, transition: transition)
+        }
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -73,6 +80,38 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             numCapFruits += 1
             currentScore.text = "Score: " + String(numCapFruits)
         }
+        if (contact.bodyA.node!.name == "player" && contact.bodyB.node!.name == "rotten") ||
+            (contact.bodyA.node!.name == "rotten" && contact.bodyB.node!.name == "player"){
+            let shrink = SKAction.scale(to: 0, duration: 0.08)
+            let removeNode = SKAction.removeFromParent()
+            let sequence = SKAction.sequence([shrink,removeNode])
+            let hurtIndicator = UIImpactFeedbackGenerator(style: .medium)
+            rotten.run(sequence)
+            lives -= 1
+            livesLabel.text = "Lives: " + String(lives)
+            hurtIndicator.impactOccurred()
+        }
+        if (contact.bodyA.node!.name == "fruit" && contact.bodyB.node!.name == "ground") ||
+            (contact.bodyA.node!.name == "ground" && contact.bodyB.node!.name == "fruit"){
+            // Actual call for what happens when fruit hits ground
+            // fruit.turnSpoiled()
+            // Temporary substitute
+            let shrink = SKAction.scale(to: 0, duration: 0.08)
+            let removeNode = SKAction.removeFromParent()
+            let sequence = SKAction.sequence([shrink,removeNode])
+            let missedIndicator = UIImpactFeedbackGenerator(style: .medium)
+            fruit.run(sequence)
+            lives -= 1
+            livesLabel.text = "Lives: " + String(lives)
+            missedIndicator.impactOccurred()
+        }
+        if (contact.bodyA.node!.name == "rotten" && contact.bodyB.node!.name == "ground") ||
+            (contact.bodyA.node!.name == "ground" && contact.bodyB.node!.name == "rotten"){
+            let shrink = SKAction.scale(to: 0, duration: 0.08)
+            let removeNode = SKAction.removeFromParent()
+            let sequence = SKAction.sequence([shrink,removeNode])
+            rotten.run(sequence)
+        }
     }
     
     func setUpPhysics() {
@@ -107,6 +146,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ground.anchorPoint = CGPoint(x: 0, y: 0)
         ground.position = CGPoint(x: 0, y: 0)
         ground.zPosition = 1
+        ground.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: ground.size.width, height: ground.size.height))
+        ground.physicsBody?.affectedByGravity = false
+        ground.physicsBody?.isDynamic = false
+        ground.physicsBody?.friction = 1.0
+        ground.physicsBody?.categoryBitMask = 3
+        ground.physicsBody?.collisionBitMask = 0
+        ground.physicsBody?.contactTestBitMask = 2
+        ground.name = "ground"
         self.addChild(ground)
         
         let sky = SKSpriteNode(color: SKColor.cyan, size: CGSize(width: size.width, height: size.height))
@@ -149,12 +196,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     private func spawnFruit() {
-        let wait = SKAction.wait(forDuration: duration, withRange: 2)
+        let wait = SKAction.wait(forDuration: fruitDuration, withRange: 2)
         let spawn = SKAction.run {
             self.fruit = Fruit(color: SKColor.yellow, size: CGSize(width: 40, height: 40))
             let xRange = 0...self.size.width
             let xPos = CGFloat.random(in: xRange)
-            self.fruit.position = CGPoint(x: xPos, y: self.size.height + 50)
+            self.fruit.position = CGPoint(x: xPos, y: self.size.height)
             self.addChild(self.fruit)
         }
         
@@ -163,6 +210,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     private func spawnRotten() {
+        let wait = SKAction.wait(forDuration: rottenDuration, withRange: 2)
+        let spawn = SKAction.run {
+            self.rotten = Rotten(color: SKColor.black, size: CGSize(width: 40, height: 40))
+            let xRange = 0...self.size.width
+            let xPos = CGFloat.random(in: xRange)
+            self.rotten.position = CGPoint(x: xPos, y: self.size.height)
+            self.addChild(self.rotten)
+        }
         
+        let sequence = SKAction.sequence([wait,spawn])
+        self.run(SKAction.repeatForever(sequence))
     }
 }

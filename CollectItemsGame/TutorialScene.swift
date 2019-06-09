@@ -11,6 +11,7 @@ import GameplayKit
 class TutorialScene: GameScene {
     
     override func didMove(to view: SKView) {
+        super.setUpPhysics()
         super.initializeUI()
         super.initializeBackground()
         super.initializePlayer()

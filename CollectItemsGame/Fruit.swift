@@ -12,7 +12,7 @@ import SpriteKit
 class Fruit: SKSpriteNode {
     
     convenience init(color: UIColor, size: CGSize) {
-        self.init(color: color, size: size)
+        self.init(texture: nil, color: color, size: size)
         setup()
     }
     
@@ -33,7 +33,10 @@ class Fruit: SKSpriteNode {
         // Make the fruits not bouncy
         self.physicsBody?.restitution = 0.0
         // Make sure that the sprites are rotating as they fall
-        self.physicsBody?.applyTorque(5)
+        self.physicsBody?.angularVelocity = 10.0
+        
+        self.physicsBody?.categoryBitMask = 2
+        self.physicsBody?.collisionBitMask = 0
         // Give a name to the fruit node
         self.name = "fruit"
         // Put it farthest in the foreground

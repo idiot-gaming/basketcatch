@@ -9,12 +9,19 @@
 import SpriteKit
 import GameplayKit
 
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate {
     var player: SKSpriteNode!
+    var fruit: SKSpriteNode!
+    var rotten: SKSpriteNode!
     var isFingerOnPlayer = false
     var lives = 3
+    var numCapFruits = 0
+    var currentScore: SKLabelNode!
+    var livesLabel: SKLabelNode!
+    var duration = 5.0
     
     override func didMove(to view: SKView) {
+        setUpPhysics()
         initializeUI()
         initializeBackground()
         initializePlayer()
@@ -56,8 +63,37 @@ class GameScene: SKScene {
         isFingerOnPlayer = false
     }
     
+    func didBegin(_ contact: SKPhysicsContact) {
+        if (contact.bodyA.node!.name == "player" && contact.bodyB.node!.name == "fruit") ||
+            (contact.bodyA.node!.name == "fruit" && contact.bodyB.node!.name == "player"){
+            let shrink = SKAction.scale(to: 0, duration: 0.08)
+            let removeNode = SKAction.removeFromParent()
+            let sequence = SKAction.sequence([shrink,removeNode])
+            fruit.run(sequence)
+            numCapFruits += 1
+            currentScore.text = "Score: " + String(numCapFruits)
+        }
+    }
+    
+    func setUpPhysics() {
+        physicsWorld.contactDelegate = self
+        physicsWorld.gravity = CGVector(dx: 0.0, dy: -2.0)
+        physicsWorld.speed = 1.0
+    }
+    
     func initializeUI() {
         // Steven can do UI
+        currentScore = SKLabelNode(fontNamed: "ArialRoundedMTBold")
+        currentScore.fontColor = SKColor.black
+        currentScore.text = "Score: " + String(numCapFruits)
+        currentScore.position = CGPoint(x: (self.size.width/2) - 100, y: self.size.height - 75)
+        self.addChild(currentScore)
+        
+        livesLabel = SKLabelNode(fontNamed: "ArialRoundedMTBold")
+        livesLabel.fontColor = SKColor.red
+        livesLabel.text = "Lives: " + String(lives)
+        livesLabel.position = CGPoint(x: (size.width/2) + 100, y: size.height - 75)
+        self.addChild(livesLabel)
     }
     
     func initializeBackground() {
@@ -100,25 +136,33 @@ class GameScene: SKScene {
         // Don't allow the player to experience friction
         player.physicsBody?.friction = 0.0
         // Add the player to the scene
+        player.physicsBody?.categoryBitMask = 1
+        player.physicsBody?.collisionBitMask = 0
+        player.physicsBody?.contactTestBitMask = 2
+        
         self.addChild(player)
     }
     
     func startSpawner() {
         spawnFruit()
+        spawnRotten()
     }
     
     private func spawnFruit() {
-        let wait = SKAction.wait(forDuration: 10, withRange: 5)
+        let wait = SKAction.wait(forDuration: duration, withRange: 2)
         let spawn = SKAction.run {
-            let fruit = Fruit(color: SKColor.yellow, size: CGSize(width: 20, height: 20))
+            self.fruit = Fruit(color: SKColor.yellow, size: CGSize(width: 40, height: 40))
             let xRange = 0...self.size.width
             let xPos = CGFloat.random(in: xRange)
-            fruit.position = CGPoint(x: xPos, y: self.size.height + 100)
+            self.fruit.position = CGPoint(x: xPos, y: self.size.height + 50)
+            self.addChild(self.fruit)
         }
         
         let sequence = SKAction.sequence([wait,spawn])
-        if lives < 0 {
-            self.run(sequence)
-        }
+        self.run(SKAction.repeatForever(sequence))
+    }
+    
+    private func spawnRotten() {
+        
     }
 }

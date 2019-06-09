@@ -65,6 +65,17 @@ class GameScene: SKScene {
         /*
         self.addChild(background)
         */
+        let ground = SKSpriteNode(color: SKColor.green, size: CGSize(width: size.width, height: 175))
+        ground.anchorPoint = CGPoint(x: 0, y: 0)
+        ground.position = CGPoint(x: 0, y: 0)
+        ground.zPosition = 1
+        self.addChild(ground)
+        
+        let sky = SKSpriteNode(color: SKColor.cyan, size: CGSize(width: size.width, height: size.height))
+        sky.anchorPoint = CGPoint(x: 0, y: 0)
+        sky.position = CGPoint(x: 0, y: 0)
+        sky.zPosition = 0
+        self.addChild(sky)
         // For testing purposes set scene's background color to white
         self.backgroundColor = SKColor.white
     }

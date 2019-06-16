@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D50541B022B6E5FC006509DB /* FruitEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50541AF22B6E5FC006509DB /* FruitEnum.swift */; };
 		D5F4D64B22AC4DCC00EFC805 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F4D64A22AC4DCC00EFC805 /* AppDelegate.swift */; };
 		D5F4D64D22AC4DCC00EFC805 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = D5F4D64C22AC4DCC00EFC805 /* GameScene.sks */; };
 		D5F4D64F22AC4DCC00EFC805 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = D5F4D64E22AC4DCC00EFC805 /* Actions.sks */; };
@@ -25,6 +26,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D50541AF22B6E5FC006509DB /* FruitEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FruitEnum.swift; sourceTree = "<group>"; };
 		D5F4D64722AC4DCC00EFC805 /* CollectItemsGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CollectItemsGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5F4D64A22AC4DCC00EFC805 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D5F4D64C22AC4DCC00EFC805 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -84,6 +86,7 @@
 				D5F4D65022AC4DCC00EFC805 /* GameScene.swift */,
 				D5FC3EFD22AD024900550350 /* Rotten.swift */,
 				D5F7447E22AC8D8400961279 /* Fruit.swift */,
+				D50541AF22B6E5FC006509DB /* FruitEnum.swift */,
 				D5F58B0F22AC6DA900D6AEAA /* TutorialScene.swift */,
 				D5F4D65222AC4DCC00EFC805 /* GameViewController.swift */,
 				D5F4D65422AC4DCC00EFC805 /* Main.storyboard */,
@@ -170,6 +173,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D5F7447F22AC8D8400961279 /* Fruit.swift in Sources */,
+				D50541B022B6E5FC006509DB /* FruitEnum.swift in Sources */,
 				D5FC3EFE22AD024900550350 /* Rotten.swift in Sources */,
 				D5F4D65122AC4DCC00EFC805 /* GameScene.swift in Sources */,
 				D5F4D65322AC4DCC00EFC805 /* GameViewController.swift in Sources */,

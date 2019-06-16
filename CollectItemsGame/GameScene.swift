@@ -304,7 +304,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     private func spawnFruit() {
         let wait = SKAction.wait(forDuration: fruitDuration, withRange: 2)
         let spawn = SKAction.run {
-            let fruit = Fruit(color: SKColor.yellow, size: CGSize(width: 40, height: 40))
+            let randColor = FruitColors.allCases.randomElement()!
+            let fruit = Fruit(color: randColor.color, size: CGSize(width: 40, height: 40))
             let xRange = 40...(self.size.width - 40)
             let xPos = CGFloat.random(in: xRange)
             fruit.position = CGPoint(x: xPos, y: self.size.height)

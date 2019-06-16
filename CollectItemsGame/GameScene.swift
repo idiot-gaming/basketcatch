@@ -11,6 +11,10 @@ import GameplayKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     var player: SKSpriteNode!
+    var basket: SKSpriteNode!
+    var basketSideL: SKSpriteNode!
+    var basketSideR: SKSpriteNode!
+    var basketBottom: SKSpriteNode!
     var isFingerOnPlayer = false
     var lives = 3
     var numCapFruits = 0
@@ -24,6 +28,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         initializeUI()
         initializeBackground()
         initializePlayer()
+        initializeBasket()
         startSpawner()
     }
     
@@ -32,7 +37,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if lives == 0 {
             // End the game and return to main menu
             let mainMenuScene = MainMenuScene(fileNamed: "MainMenuScene")!
-            let transition = SKTransition.fade(withDuration: 2)
+            let transition = SKTransition.fade(withDuration: 1)
             view!.presentScene(mainMenuScene, transition: transition)
         }
     }
@@ -42,7 +47,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let location = touch!.location(in: self)
         
         if let body = physicsWorld.body(at: location) {
-            if body.node!.name == player.name {
+            if body.node!.name == player.name || body.node!.name == basket.name
+            || body.node!.name == basketSideL.name || body.node!.name == basketSideR.name
+            || body.node!.name == basketBottom.name {
                 print("touched player")
                 isFingerOnPlayer = true
             }
@@ -72,8 +79,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         guard let nodeA = contact.bodyA.node else {return}
         guard let nodeB = contact.bodyB.node else {return}
         
-        if (nodeA.name == "player" && nodeB.name == "fruit") ||
-            (nodeA.name == "fruit" && nodeB.name == "player") {
+        if (nodeA.name == "basket" && nodeB.name == "fruit") ||
+            (nodeA.name == "fruit" && nodeB.name == "basket") {
             let shrink = SKAction.scale(to: 0, duration: 0.08)
             let removeNode = SKAction.removeFromParent()
             let sequence = SKAction.sequence([shrink,removeNode])
@@ -87,8 +94,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             numCapFruits += 1
             currentScore.text = "Score: " + String(numCapFruits)
         }
-        if (nodeA.name == "player" && nodeB.name == "rotten") ||
-            (nodeA.name == "rotten" && nodeB.name == "player"){
+        if (nodeA.name == "basket" && nodeB.name == "rotten") ||
+            (nodeA.name == "rotten" && nodeB.name == "basket"){
             let shrink = SKAction.scale(to: 0, duration: 0.08)
             let removeNode = SKAction.removeFromParent()
             let sequence = SKAction.sequence([shrink,removeNode])
@@ -189,8 +196,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func initializePlayer() {
-        // Load up player asset as brown rectangle
-        player = SKSpriteNode(color: SKColor.brown, size: CGSize(width: 40, height: 100))
+        // Load up player asset as white rectangle
+        player = SKSpriteNode(color: SKColor.white, size: CGSize(width: 40, height: 100))
         // Set the player's initial position and anchor point
         player.position = CGPoint(x: size.width / 2, y: 225)
         // Set the player's position to be in the foreground rather than background
@@ -206,10 +213,80 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Don't allow the player to experience friction
         player.physicsBody?.friction = 0.0
         // Set the category for collisions for the player
-        player.physicsBody?.categoryBitMask = PhysicsCategory.player.rawValue
-        player.physicsBody?.contactTestBitMask = 6
+        // player.physicsBody?.categoryBitMask = PhysicsCategory.player.rawValue
+        // player.physicsBody?.contactTestBitMask = 6
         // Add the player to the scene
         self.addChild(player)
+    }
+    
+    func initializeBasket() {
+        // Load up basket asset as red square
+        basket = SKSpriteNode(color: SKColor.red, size: CGSize(width: 40, height: 30))
+        // Set the basket's initial position and anchor point
+        basket.position = CGPoint(x: 0, y: 0)
+        // Set the basket's position to be in front of the player
+        basket.zPosition = 2
+        // Set the basket's name for identification
+        basket.name = "basket"
+        // Add physics body to the basket to interact with falling objects
+        basket.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: basket.size.width, height: basket.size.height))
+        // Turn off gravity for basket
+        basket.physicsBody?.affectedByGravity = false
+        // Don't allow fruits to move the basket
+        basket.physicsBody?.isDynamic = false
+        // Don't allow the basket to experience friction
+        basket.physicsBody?.friction = 0.0
+        // Set category for collision
+        basket.physicsBody?.categoryBitMask = PhysicsCategory.basket.rawValue
+        basket.physicsBody?.contactTestBitMask = 6
+        
+        player.addChild(basket)
+        
+        basketSideL = SKSpriteNode(color: SKColor.brown, size: CGSize(width: 10, height: 30))
+        basketSideR = SKSpriteNode(color: SKColor.brown, size: CGSize(width: 10, height: 30))
+        
+        basketSideL.position = CGPoint(x: 25, y: 0)
+        basketSideR.position = CGPoint(x: -25, y: 0)
+        
+        basketSideL.zPosition = 2
+        basketSideR.zPosition = 2
+        
+        basketSideL.name = "basketSideL"
+        basketSideR.name = "basketSideR"
+        
+        basketSideL.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: basketSideL.size.width, height: basketSideL.size.width))
+        basketSideR.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: basketSideR.size.width, height: basketSideR.size.width))
+        
+        basketSideL.physicsBody?.affectedByGravity = false
+        basketSideR.physicsBody?.affectedByGravity = false
+        
+        basketSideL.physicsBody?.isDynamic = false
+        basketSideR.physicsBody?.isDynamic = false
+        
+        basketSideL.physicsBody?.friction = 0.0
+        basketSideR.physicsBody?.friction = 0.0
+        
+        basketSideL.physicsBody?.categoryBitMask = PhysicsCategory.basketSide.rawValue
+        basketSideR.physicsBody?.categoryBitMask = PhysicsCategory.basketSide.rawValue
+        
+        basketSideL.physicsBody?.contactTestBitMask = 6
+        basketSideR.physicsBody?.contactTestBitMask = 6
+        
+        player.addChild(basketSideL)
+        player.addChild(basketSideR)
+        
+        basketBottom = SKSpriteNode(color: SKColor.brown, size: CGSize(width: 60, height: 10))
+        basketBottom.position = CGPoint(x: 0, y: -10)
+        basketBottom.zPosition = 2
+        basketBottom.name = "basketBottom"
+        basketBottom.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: basketBottom.size.width, height: basketBottom.size.height))
+        basketBottom.physicsBody?.affectedByGravity = false
+        basketBottom.physicsBody?.isDynamic = false
+        basketBottom.physicsBody?.friction = 0.0
+        basketBottom.physicsBody?.categoryBitMask = PhysicsCategory.basketSide.rawValue
+        basketBottom.physicsBody?.contactTestBitMask = 6
+        
+        player.addChild(basketBottom)
     }
     
     func startSpawner() {

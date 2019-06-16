@@ -94,23 +94,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             numCapFruits += 1
             currentScore.text = "Score: " + String(numCapFruits)
         }
-        if (nodeA.name == "basket" && nodeB.name == "rotten") ||
-            (nodeA.name == "rotten" && nodeB.name == "basket"){
-            let shrink = SKAction.scale(to: 0, duration: 0.08)
-            let removeNode = SKAction.removeFromParent()
-            let sequence = SKAction.sequence([shrink,removeNode])
-            let hurtIndicator = UIImpactFeedbackGenerator(style: .medium)
-            if nodeA.name == "rotten" {
-                nodeA.run(sequence)
-            }
-            else if nodeB.name == "rotten" {
-                nodeB.run(sequence)
-            }
-            
-            lives -= 1
-            livesLabel.text = "Lives: " + String(lives)
-            hurtIndicator.impactOccurred()
-        }
         if (nodeA.name == "fruit" && nodeB.name == "ground") ||
             (nodeA.name == "ground" && nodeB.name == "fruit"){
             // Actual call for what happens when fruit hits ground
@@ -142,6 +125,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             else if nodeB.name == "rotten" {
                 nodeB.run(sequence)
             }
+        }
+        if (nodeA.name == "rotten" && nodeB.name == "player") ||
+            (nodeA.name == "player" && nodeB.name == "rotten") {
+            let shrink = SKAction.scale(to: 0, duration: 0.08)
+            let removeNode = SKAction.removeFromParent()
+            let sequence = SKAction.sequence([shrink,removeNode])
+            if nodeA.name == "rotten" {
+                nodeA.run(sequence)
+            }
+            else if nodeB.name == "rotten" {
+                nodeB.run(sequence)
+            }
+            
+            lives -= 1
+            livesLabel.text = "Lives: " + String(lives)
+            hurtIndicator.impactOccurred()
         }
     }
     
@@ -213,8 +212,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Don't allow the player to experience friction
         player.physicsBody?.friction = 0.0
         // Set the category for collisions for the player
-        // player.physicsBody?.categoryBitMask = PhysicsCategory.player.rawValue
-        // player.physicsBody?.contactTestBitMask = 6
+        player.physicsBody?.collisionBitMask = 0
+        player.physicsBody?.categoryBitMask = 0
         // Add the player to the scene
         self.addChild(player)
     }

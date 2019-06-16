@@ -224,9 +224,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func initializeBasket() {
         // Load up basket asset as red square
-        basket = SKSpriteNode(color: SKColor.red, size: CGSize(width: 20, height: 5))
+        basket = SKSpriteNode(color: SKColor.clear, size: CGSize(width: 15, height: 5))
         // Set the basket's initial position and anchor point
-        basket.position = CGPoint(x: 0, y: 0)
+        basket.position = CGPoint(x: 0, y: -5)
         // Set the basket's position to be in front of the player
         basket.zPosition = 2
         // Set the basket's name for identification

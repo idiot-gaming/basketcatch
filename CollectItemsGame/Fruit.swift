@@ -11,6 +11,18 @@ import SpriteKit
 
 class Fruit: SKSpriteNode {
     
+    enum FruitSprite: String, CaseIterable {
+        case Orange = "orange"
+        case Plum = "plum"
+        case Pineapple = "pineapple"
+        case Avocado = "avocado"
+        case Strawberry = "strawberry"
+        case Blueberry = "blueberry"
+        case Apple = "apple"
+        case Kiwi = "kiwi"
+        case Lemon = "lemon"
+    }
+    
     convenience init(color: UIColor, size: CGSize) {
         self.init(texture: nil, color: color, size: size)
         setup()
@@ -26,6 +38,8 @@ class Fruit: SKSpriteNode {
     }
     
     private func setup() {
+        let fruitSprite = FruitSprite.allCases.randomElement()!
+        
         // Set up a basic physics body
         self.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: self.size.width, height: self.size.height))
         // The fruits fall so obv affected by gravity

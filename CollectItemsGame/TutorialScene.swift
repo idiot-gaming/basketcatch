@@ -16,5 +16,14 @@ class TutorialScene: GameScene {
         super.initializeBackground()
         super.initializePlayer()
         super.initializeBasket()
+        displayStartTutorial()
+    }
+    
+    private func displayStartTutorial() {
+        /*
+         Some UI for user to click through to display instructions
+         Make sure user can only click "Next" on instructions so that
+         they don't start gameplay until done reading instructions
+        */
     }
 }

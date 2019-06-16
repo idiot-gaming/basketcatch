@@ -36,12 +36,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
-        if lives == 0 {
+        if lives <= 0 {
             // End the game and return to main menu
-            lives = 3
             let mainMenuScene = MainMenuScene(fileNamed: "MainMenuScene")!
             let transition = SKTransition.fade(withDuration: 1)
             view!.presentScene(mainMenuScene, transition: transition)
+            lives = 3
         }
         
         removeFruit()

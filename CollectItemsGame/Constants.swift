@@ -16,9 +16,9 @@ struct PhysicsCategory: OptionSet {
         self.rawValue = rawValue
     }
     
-    static let basket = PhysicsCategory(rawValue: 0b000001)
-    static let fruit = PhysicsCategory(rawValue: 0b000010)
-    static let rotten = PhysicsCategory(rawValue: 0b000100)
-    static let ground = PhysicsCategory(rawValue: 0b001000)
-    static let basketSide = PhysicsCategory(rawValue: 0b010000)
+    static let basket = PhysicsCategory(rawValue: 0b00001)
+    static let fruit = PhysicsCategory(rawValue: 0b00010)
+    static let rotten = PhysicsCategory(rawValue: 0b00100)
+    static let ground = PhysicsCategory(rawValue: 0b01000)
+    static let basketSide = PhysicsCategory(rawValue: 0b10000)
 }

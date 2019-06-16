@@ -32,7 +32,7 @@ class Rotten: SKSpriteNode {
         self.physicsBody?.angularVelocity = 10.0
         self.name = "rotten"
         self.physicsBody?.categoryBitMask = PhysicsCategory.rotten.rawValue
-        self.physicsBody?.contactTestBitMask = 9
+        self.physicsBody?.contactTestBitMask = 25
         self.zPosition = 2
     }
 }

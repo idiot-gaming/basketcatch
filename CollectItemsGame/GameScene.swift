@@ -36,6 +36,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Called before each frame is rendered
         if lives == 0 {
             // End the game and return to main menu
+            lives = 3
             let mainMenuScene = MainMenuScene(fileNamed: "MainMenuScene")!
             let transition = SKTransition.fade(withDuration: 1)
             view!.presentScene(mainMenuScene, transition: transition)
@@ -126,8 +127,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 nodeB.run(sequence)
             }
         }
-        if (nodeA.name == "rotten" && nodeB.name == "player") ||
-            (nodeA.name == "player" && nodeB.name == "rotten") {
+        if (nodeA.name == "rotten" && nodeB.name == "basket") ||
+            (nodeA.name == "basket" && nodeB.name == "rotten") ||
+            (nodeA.name == "rotten" && nodeB.name == "basketSideL") ||
+            (nodeA.name == "basketSideL" && nodeB.name == "rotten") ||
+            (nodeA.name == "rotten" && nodeB.name == "basketSideR") ||
+            (nodeA.name == "basketSideR" && nodeB.name == "rotten") {
             let shrink = SKAction.scale(to: 0, duration: 0.08)
             let removeNode = SKAction.removeFromParent()
             let sequence = SKAction.sequence([shrink,removeNode])
@@ -140,7 +145,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             lives -= 1
             livesLabel.text = "Lives: " + String(lives)
-            hurtIndicator.impactOccurred()
         }
     }
     
@@ -211,7 +215,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         player.physicsBody?.isDynamic = false
         // Don't allow the player to experience friction
         player.physicsBody?.friction = 0.0
-        // Set the category for collisions for the player
+        // Set the player to have no collisions
         player.physicsBody?.collisionBitMask = 0
         player.physicsBody?.categoryBitMask = 0
         // Add the player to the scene
@@ -220,7 +224,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func initializeBasket() {
         // Load up basket asset as red square
-        basket = SKSpriteNode(color: SKColor.red, size: CGSize(width: 40, height: 30))
+        basket = SKSpriteNode(color: SKColor.red, size: CGSize(width: 20, height: 5))
         // Set the basket's initial position and anchor point
         basket.position = CGPoint(x: 0, y: 0)
         // Set the basket's position to be in front of the player

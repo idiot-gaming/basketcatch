@@ -37,7 +37,7 @@ class Fruit: SKSpriteNode {
         // Add the physics category to it
         self.physicsBody?.categoryBitMask = PhysicsCategory.fruit.rawValue
         // Add the physics category for accepting collisions
-        self.physicsBody?.contactTestBitMask = 9
+        self.physicsBody?.contactTestBitMask = 25
         // Give a name to the fruit node
         self.name = "fruit"
         // Put it farthest in the foreground

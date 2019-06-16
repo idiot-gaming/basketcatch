@@ -22,6 +22,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var livesLabel: SKLabelNode!
     var fruitDuration = 5.0
     var rottenDuration = 7.0
+    var fruits: [Fruit] = []
+    var rottens: [Rotten] = []
     
     override func didMove(to view: SKView) {
         setUpPhysics()
@@ -41,6 +43,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let transition = SKTransition.fade(withDuration: 1)
             view!.presentScene(mainMenuScene, transition: transition)
         }
+        
+        removeFruit()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -305,6 +309,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let xPos = CGFloat.random(in: xRange)
             fruit.position = CGPoint(x: xPos, y: self.size.height)
             self.addChild(fruit)
+            self.fruits.append(fruit)
         }
         
         let sequence = SKAction.sequence([wait,spawn])
@@ -319,9 +324,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let xPos = CGFloat.random(in: xRange)
             rotten.position = CGPoint(x: xPos, y: self.size.height)
             self.addChild(rotten)
+            self.rottens.append(rotten)
         }
         
         let sequence = SKAction.sequence([wait,spawn])
         self.run(SKAction.repeatForever(sequence))
+    }
+    
+    private func removeFruit() {
+        var indicesToRemove: [Int] = []
+        
+        for i in 0..<fruits.endIndex {
+            if fruits[i].position.x < 0 || fruits[i].position.x > self.scene!.size.width {
+                fruits[i].removeFromParent()
+                indicesToRemove.append(i)
+                
+                lives -= 1
+                livesLabel.text = "Lives: " + String(lives)
+            }
+        }
+        
+        for i in 0..<indicesToRemove.endIndex {
+            fruits.remove(at: indicesToRemove[i])
+        }
     }
 }

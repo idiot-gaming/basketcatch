@@ -15,9 +15,6 @@ class TutorialScene: GameScene {
         super.initializeUI()
         super.initializeBackground()
         super.initializePlayer()
-    }
-    
-    override func update(_ currentTime: TimeInterval) {
-        
+        super.initializeBasket()
     }
 }

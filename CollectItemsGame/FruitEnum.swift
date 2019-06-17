@@ -16,7 +16,7 @@ enum FruitColors: CaseIterable {
     case green
     case red
     case purple
-    case ice
+    // case ice
     
     var color: UIColor {
         switch self {
@@ -26,7 +26,7 @@ enum FruitColors: CaseIterable {
             case .green: return SKColor.green
             case .blue: return SKColor.blue
             case .purple: return SKColor.purple
-            case .ice: return SKColor.white
+            // case .ice: return SKColor.white
         }
     }
 }

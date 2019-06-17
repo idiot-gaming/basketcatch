@@ -31,7 +31,6 @@ class Rotten: SKSpriteNode {
         self.physicsBody?.friction = 0.0
         self.physicsBody?.restitution = 0.0
         self.physicsBody?.angularVelocity = 10.0
-//        self.physicsBody?.velocity = CGVector(dx: 0.0, dy: -400.0)
         self.name = "rotten"
         self.physicsBody?.categoryBitMask = PhysicsCategory.rotten.rawValue
         self.physicsBody?.contactTestBitMask = 25

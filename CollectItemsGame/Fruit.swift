@@ -35,12 +35,12 @@ class Fruit: SKSpriteNode {
         self.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: self.size.width, height: self.size.height))
         // The fruits fall so obv affected by gravity
         self.physicsBody?.affectedByGravity = true
+        // Turn off the friction
         self.physicsBody?.friction = 0.0
         // Make the fruits not bouncy
         self.physicsBody?.restitution = 0.3
         // Make sure that the sprites are rotating as they fall
         self.physicsBody?.angularVelocity = 10.0
-//        self.physicsBody?.velocity = CGVector(dx: 0.0, dy: -400.0)
         // Add the physics category to it
         self.physicsBody?.categoryBitMask = PhysicsCategory.fruit.rawValue
         // Add the physics category for accepting collisions

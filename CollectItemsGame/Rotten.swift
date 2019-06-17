@@ -28,8 +28,10 @@ class Rotten: SKSpriteNode {
     private func setup() {
         self.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: self.size.width, height: self.size.height))
         self.physicsBody?.affectedByGravity = true
+        self.physicsBody?.friction = 0.0
         self.physicsBody?.restitution = 0.0
         self.physicsBody?.angularVelocity = 10.0
+//        self.physicsBody?.velocity = CGVector(dx: 0.0, dy: -400.0)
         self.name = "rotten"
         self.physicsBody?.categoryBitMask = PhysicsCategory.rotten.rawValue
         self.physicsBody?.contactTestBitMask = 25

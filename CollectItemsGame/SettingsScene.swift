@@ -24,7 +24,6 @@ class SettingsScene: SKScene {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
             let location = touch.location(in: self)
-            // let menuLocation: CGPoint? = touch.location(in: languageMenu)
             
             if languageSetting.contains(location) {
                 self.initializeLanguageOptions()
@@ -33,7 +32,6 @@ class SettingsScene: SKScene {
             if languageBackButton.contains(location) {
                 print("touched")
             }
-            
 //            if languageBackButton.contains(menuLocation!) {
 //                self.removeLanguageOptions()
 //                self.initializeSettings()

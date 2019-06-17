@@ -10,13 +10,19 @@ import Foundation
 import SpriteKit
 
 class Fruit: SKSpriteNode {
+    var isIceFruit = false
+    
     convenience init(color: UIColor, size: CGSize) {
         self.init(texture: nil, color: color, size: size)
-        setup()
     }
     
     override init(texture: SKTexture?, color: UIColor, size: CGSize) {
         super.init(texture: texture, color: color, size: size)
+        
+        if color.isEqual(SKColor.white) {
+            isIceFruit = true
+        }
+        
         setup()
     }
     
@@ -29,16 +35,23 @@ class Fruit: SKSpriteNode {
         self.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: self.size.width, height: self.size.height))
         // The fruits fall so obv affected by gravity
         self.physicsBody?.affectedByGravity = true
+        self.physicsBody?.friction = 0.0
         // Make the fruits not bouncy
-        self.physicsBody?.restitution = 0.0
+        self.physicsBody?.restitution = 0.3
         // Make sure that the sprites are rotating as they fall
         self.physicsBody?.angularVelocity = 10.0
+//        self.physicsBody?.velocity = CGVector(dx: 0.0, dy: -400.0)
         // Add the physics category to it
         self.physicsBody?.categoryBitMask = PhysicsCategory.fruit.rawValue
         // Add the physics category for accepting collisions
         self.physicsBody?.contactTestBitMask = 25
         // Give a name to the fruit node
-        self.name = "fruit"
+        if isIceFruit {
+            self.name = "iceFruit"
+        }
+        else{
+            self.name = "fruit"
+        }
         // Put it farthest in the foreground
         self.zPosition = 2
     }

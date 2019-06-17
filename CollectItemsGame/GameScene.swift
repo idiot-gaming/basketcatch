@@ -24,6 +24,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var rottenDuration = 7.0
     var fruits: [Fruit] = []
     var rottens: [Rotten] = []
+    var iceFruitActive = false
+    var frozenTimer: Timer!
+    var frozenSeconds = 10
     
     override func didMove(to view: SKView) {
         setUpPhysics()
@@ -42,6 +45,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let transition = SKTransition.fade(withDuration: 1)
             view!.presentScene(mainMenuScene, transition: transition)
             lives = 3
+        }
+        
+        if frozenSeconds <= 0 {
+            physicsWorld.gravity = CGVector(dx: 0.0, dy: -3.0)
+            
+            for i in 0..<fruits.endIndex {
+                fruits[i].physicsBody?.velocity = CGVector(dx: 0.0, dy: -500.0)
+            }
+            for i in 0..<rottens.endIndex {
+                rottens[i].physicsBody?.velocity = CGVector(dx: 0.0, dy: -500.0)
+            }
+            
+            frozenTimer.invalidate()
+            frozenSeconds = 10
         }
         
         removeFruit()
@@ -99,6 +116,49 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             numCapFruits += 1
             currentScore.text = "Score: " + String(numCapFruits)
         }
+        if (nodeA.name == "basket" && nodeB.name == "iceFruit") ||
+            (nodeA.name == "iceFruit" && nodeB.name == "basket") {
+            let shrink = SKAction.scale(to: 0, duration: 0.08)
+            let removeNode = SKAction.removeFromParent()
+            let sequence = SKAction.sequence([shrink,removeNode])
+            if nodeA.name == "iceFruit" {
+                nodeA.run(sequence)
+            }
+            else if nodeB.name == "iceFruit" {
+                nodeB.run(sequence)
+            }
+            
+            // Somehow get the fruits and stuff to slow down (change gravity and velocity together)
+            physicsWorld.gravity = CGVector(dx: 0.0, dy: -1.5)
+            
+            for i in 0..<fruits.endIndex {
+                fruits[i].physicsBody?.velocity = CGVector(dx: 0.0, dy: -250.0)
+            }
+            
+            // Start the timer to count down the seconds while frozen
+            frozenTimer = Timer(timeInterval: 1, target: self, selector: #selector(self.updateTimer), userInfo: nil, repeats: true)
+            
+            numCapFruits += 1
+            currentScore.text = "Score: " + String(numCapFruits)
+        }
+        if (nodeA.name == "iceFruit" && nodeB.name == "ground") ||
+            (nodeA.name == "ground" && nodeB.name == "iceFruit"){
+            let shrink = SKAction.scale(to: 0, duration: 0.08)
+            let removeNode = SKAction.removeFromParent()
+            let sequence = SKAction.sequence([shrink,removeNode])
+            let missedIndicator = UIImpactFeedbackGenerator(style: .medium)
+            if nodeA.name == "iceFruit" {
+                nodeA.run(sequence)
+            }
+            else if nodeB.name == "iceFruit" {
+                nodeB.run(sequence)
+            }
+            
+            lives -= 1
+            livesLabel.text = "Lives: " + String(lives)
+            missedIndicator.impactOccurred()
+        }
+        
         if (nodeA.name == "fruit" && nodeB.name == "ground") ||
             (nodeA.name == "ground" && nodeB.name == "fruit"){
             // Actual call for what happens when fruit hits ground
@@ -150,6 +210,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             lives -= 1
             livesLabel.text = "Lives: " + String(lives)
         }
+    }
+    
+    @objc func updateTimer() {
+        frozenSeconds -= 1
     }
     
     func setUpPhysics() {

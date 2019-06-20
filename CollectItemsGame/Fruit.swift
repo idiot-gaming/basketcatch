@@ -42,9 +42,10 @@ class Fruit: SKSpriteNode {
         // Make sure that the sprites are rotating as they fall
         self.physicsBody?.angularVelocity = 10.0
         // Add the physics category to it
-        self.physicsBody?.categoryBitMask = PhysicsCategory.fruit.rawValue
+        self.physicsBody?.categoryBitMask = PhysicsCategory.fruit.value
         // Add the physics category for accepting collisions
-        self.physicsBody?.contactTestBitMask = 25
+        self.physicsBody?.collisionBitMask = PhysicsCategory.basket.value | PhysicsCategory.ground.value
+        // self.physicsBody?.contactTestBitMask = PhysicsCategory.basket.value | PhysicsCategory.ground.value
         // Give a name to the fruit node
         if isIceFruit {
             self.name = "iceFruit"

@@ -27,6 +27,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var iceFruitActive = false
     var frozenTimer: Timer!
     var frozenSeconds = 10
+    var numFruitsToSpawn = 1
+    var numRottensToSpawn = 1
     
     override func didMove(to view: SKView) {
         setUpPhysics()
@@ -103,6 +105,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if (nodeA.name == "basket" && nodeB.name == "fruit") ||
             (nodeA.name == "fruit" && nodeB.name == "basket") {
+            print("hello")
             let shrink = SKAction.scale(to: 0, duration: 0.08)
             let removeNode = SKAction.removeFromParent()
             let sequence = SKAction.sequence([shrink,removeNode])
@@ -116,49 +119,49 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             numCapFruits += 1
             currentScore.text = "Score: " + String(numCapFruits)
         }
-        if (nodeA.name == "basket" && nodeB.name == "iceFruit") ||
-            (nodeA.name == "iceFruit" && nodeB.name == "basket") {
-            let shrink = SKAction.scale(to: 0, duration: 0.08)
-            let removeNode = SKAction.removeFromParent()
-            let sequence = SKAction.sequence([shrink,removeNode])
-            if nodeA.name == "iceFruit" {
-                nodeA.run(sequence)
-            }
-            else if nodeB.name == "iceFruit" {
-                nodeB.run(sequence)
-            }
-            
-            // Somehow get the fruits and stuff to slow down (change gravity and velocity together)
-            physicsWorld.gravity = CGVector(dx: 0.0, dy: -1.5)
-            
-            for i in 0..<fruits.endIndex {
-                fruits[i].physicsBody?.velocity = CGVector(dx: 0.0, dy: -250.0)
-            }
-            
-            // Start the timer to count down the seconds while frozen
-            frozenTimer = Timer(timeInterval: 1, target: self, selector: #selector(self.updateTimer), userInfo: nil, repeats: true)
-            
-            numCapFruits += 1
-            currentScore.text = "Score: " + String(numCapFruits)
-        }
-        if (nodeA.name == "iceFruit" && nodeB.name == "ground") ||
-            (nodeA.name == "ground" && nodeB.name == "iceFruit"){
-            let shrink = SKAction.scale(to: 0, duration: 0.08)
-            let removeNode = SKAction.removeFromParent()
-            let sequence = SKAction.sequence([shrink,removeNode])
-            let missedIndicator = UIImpactFeedbackGenerator(style: .medium)
-            if nodeA.name == "iceFruit" {
-                nodeA.run(sequence)
-            }
-            else if nodeB.name == "iceFruit" {
-                nodeB.run(sequence)
-            }
-            
-            lives -= 1
-            livesLabel.text = "Lives: " + String(lives)
-            missedIndicator.impactOccurred()
-        }
-        
+//        if (nodeA.name == "basket" && nodeB.name == "iceFruit") ||
+//            (nodeA.name == "iceFruit" && nodeB.name == "basket") {
+//            let shrink = SKAction.scale(to: 0, duration: 0.08)
+//            let removeNode = SKAction.removeFromParent()
+//            let sequence = SKAction.sequence([shrink,removeNode])
+//            if nodeA.name == "iceFruit" {
+//                nodeA.run(sequence)
+//            }
+//            else if nodeB.name == "iceFruit" {
+//                nodeB.run(sequence)
+//            }
+//
+//            // Somehow get the fruits and stuff to slow down (change gravity and velocity together)
+//            physicsWorld.gravity = CGVector(dx: 0.0, dy: -1.5)
+//
+//            for i in 0..<fruits.endIndex {
+//                fruits[i].physicsBody?.velocity = CGVector(dx: 0.0, dy: -250.0)
+//            }
+//
+//            // Start the timer to count down the seconds while frozen
+//            frozenTimer = Timer(timeInterval: 1, target: self, selector: #selector(self.updateTimer), userInfo: nil, repeats: true)
+//
+//            numCapFruits += 1
+//            currentScore.text = "Score: " + String(numCapFruits)
+//        }
+//        if (nodeA.name == "iceFruit" && nodeB.name == "ground") ||
+//            (nodeA.name == "ground" && nodeB.name == "iceFruit"){
+//            let shrink = SKAction.scale(to: 0, duration: 0.08)
+//            let removeNode = SKAction.removeFromParent()
+//            let sequence = SKAction.sequence([shrink,removeNode])
+//            let missedIndicator = UIImpactFeedbackGenerator(style: .medium)
+//            if nodeA.name == "iceFruit" {
+//                nodeA.run(sequence)
+//            }
+//            else if nodeB.name == "iceFruit" {
+//                nodeB.run(sequence)
+//            }
+//
+//            lives -= 1
+//            livesLabel.text = "Lives: " + String(lives)
+//            missedIndicator.impactOccurred()
+//        }
+
         if (nodeA.name == "fruit" && nodeB.name == "ground") ||
             (nodeA.name == "ground" && nodeB.name == "fruit"){
             // Actual call for what happens when fruit hits ground
@@ -174,7 +177,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             else if nodeB.name == "fruit" {
                 nodeB.run(sequence)
             }
-            
+
             lives -= 1
             livesLabel.text = "Lives: " + String(lives)
             missedIndicator.impactOccurred()
@@ -252,8 +255,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ground.physicsBody?.affectedByGravity = false
         ground.physicsBody?.isDynamic = false
         ground.physicsBody?.friction = 1.0
-        ground.physicsBody?.categoryBitMask = PhysicsCategory.ground.rawValue
-        ground.physicsBody?.contactTestBitMask = 6
+        ground.physicsBody?.categoryBitMask = PhysicsCategory.ground.value
+        ground.physicsBody?.collisionBitMask = PhysicsCategory.fruit.value | PhysicsCategory.rotten.value
+        ground.physicsBody?.contactTestBitMask = PhysicsCategory.fruit.value | PhysicsCategory.rotten.value
         ground.name = "ground"
         self.addChild(ground)
         
@@ -284,14 +288,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Don't allow the player to experience friction
         player.physicsBody?.friction = 0.0
         // Set the player to have no collisions
-        player.physicsBody?.collisionBitMask = 0
         player.physicsBody?.categoryBitMask = 0
+        player.physicsBody?.collisionBitMask = 0
         // Add the player to the scene
         self.addChild(player)
     }
     
     func initializeBasket() {
-        // Load up basket asset as red square
+        // Load up basket asset as clear square
         basket = SKSpriteNode(color: SKColor.clear, size: CGSize(width: 18, height: 5))
         // Set the basket's initial position and anchor point
         basket.position = CGPoint(x: 0, y: -5)
@@ -308,8 +312,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Don't allow the basket to experience friction
         basket.physicsBody?.friction = 0.0
         // Set category for collision
-        basket.physicsBody?.categoryBitMask = PhysicsCategory.basket.rawValue
-        basket.physicsBody?.contactTestBitMask = 6
+        basket.physicsBody?.categoryBitMask = PhysicsCategory.basket.value
+        basket.physicsBody?.collisionBitMask = PhysicsCategory.fruit.value | PhysicsCategory.rotten.value
+        basket.physicsBody?.contactTestBitMask = PhysicsCategory.fruit.value | PhysicsCategory.rotten.value
         
         player.addChild(basket)
         
@@ -337,11 +342,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         basketSideL.physicsBody?.friction = 0.0
         basketSideR.physicsBody?.friction = 0.0
         
-        basketSideL.physicsBody?.categoryBitMask = PhysicsCategory.basketSide.rawValue
-        basketSideR.physicsBody?.categoryBitMask = PhysicsCategory.basketSide.rawValue
+        basketSideL.physicsBody?.categoryBitMask = PhysicsCategory.basket.value
+        basketSideR.physicsBody?.categoryBitMask = PhysicsCategory.basket.value
         
-        basketSideL.physicsBody?.contactTestBitMask = 6
-        basketSideR.physicsBody?.contactTestBitMask = 6
+        basketSideL.physicsBody?.collisionBitMask = PhysicsCategory.fruit.value | PhysicsCategory.rotten.value
+        basketSideR.physicsBody?.collisionBitMask = PhysicsCategory.fruit.value | PhysicsCategory.rotten.value
+        
+        basketSideL.physicsBody?.contactTestBitMask = PhysicsCategory.rotten.value
+        basketSideR.physicsBody?.contactTestBitMask = PhysicsCategory.rotten.value
         
         player.addChild(basketSideL)
         player.addChild(basketSideR)
@@ -354,47 +362,81 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         basketBottom.physicsBody?.affectedByGravity = false
         basketBottom.physicsBody?.isDynamic = false
         basketBottom.physicsBody?.friction = 0.0
-        basketBottom.physicsBody?.categoryBitMask = PhysicsCategory.basketSide.rawValue
-        basketBottom.physicsBody?.contactTestBitMask = 6
+        basketBottom.physicsBody?.categoryBitMask = PhysicsCategory.basket.value
+        basketBottom.physicsBody?.collisionBitMask = PhysicsCategory.fruit.value | PhysicsCategory.rotten.value
+        basketBottom.physicsBody?.contactTestBitMask = PhysicsCategory.rotten.value
         
         player.addChild(basketBottom)
     }
     
     func startSpawner() {
-        spawnFruit()
-        spawnRotten()
+//         spawnFruit()
+//         spawnRotten()
+        spawn()
     }
     
-    private func spawnFruit() {
-        let wait = SKAction.wait(forDuration: fruitDuration, withRange: 2)
-        let spawn = SKAction.run {
-            let randColor = FruitColors.allCases.randomElement()!
-            let fruit = Fruit(color: randColor.color, size: CGSize(width: 40, height: 40))
-            let xRange = 40...(self.size.width - 40)
-            let xPos = CGFloat.random(in: xRange)
-            fruit.position = CGPoint(x: xPos, y: self.size.height)
-            self.addChild(fruit)
-            self.fruits.append(fruit)
+    private func spawn() {
+        let fruitWait = SKAction.wait(forDuration: fruitDuration)
+        let rottenWait = SKAction.wait(forDuration: rottenDuration)
+        
+        let fruitSpawn = SKAction.run {
+            for _ in 0..<self.numFruitsToSpawn {
+                let randColor = FruitColors.allCases.randomElement()!
+                let fruit = Fruit(color: randColor.color, size: CGSize(width: 40, height: 40))
+                let xRange = 40...(self.size.width - 40)
+                let xPos = CGFloat.random(in: xRange)
+                fruit.position = CGPoint(x: xPos, y: self.size.height)
+                self.addChild(fruit)
+            }
         }
         
-        let sequence = SKAction.sequence([wait,spawn])
-        self.run(SKAction.repeatForever(sequence))
+        let rottenSpawn = SKAction.run {
+            for _ in 0..<self.numRottensToSpawn {
+                let rotten = Rotten(color: SKColor.black, size: CGSize(width: 40, height: 40))
+                let xRange = 40...(self.size.width - 40)
+                let xPos = CGFloat.random(in: xRange)
+                rotten.position = CGPoint(x: xPos, y: self.size.height)
+                self.addChild(rotten)
+            }
+        }
+        
+        let fruitSequence = SKAction.sequence([fruitWait,fruitSpawn])
+        let rottenSequeunce = SKAction.sequence([rottenWait,rottenSpawn])
+        
+        self.run(SKAction.repeatForever(fruitSequence))
+        self.run(SKAction.repeatForever(rottenSequeunce))
     }
     
-    private func spawnRotten() {
-        let wait = SKAction.wait(forDuration: rottenDuration, withRange: 2)
-        let spawn = SKAction.run {
-            let rotten = Rotten(color: SKColor.black, size: CGSize(width: 40, height: 40))
-            let xRange = 40...(self.size.width - 40)
-            let xPos = CGFloat.random(in: xRange)
-            rotten.position = CGPoint(x: xPos, y: self.size.height)
-            self.addChild(rotten)
-            self.rottens.append(rotten)
-        }
-        
-        let sequence = SKAction.sequence([wait,spawn])
-        self.run(SKAction.repeatForever(sequence))
-    }
+//    private func spawnFruit() {
+//        let wait = SKAction.wait(forDuration: fruitDuration, withRange: 2)
+//        let spawn = SKAction.run {
+//            let randColor = FruitColors.allCases.randomElement()!
+//            let fruit = Fruit(color: randColor.color, size: CGSize(width: 40, height: 40))
+//            let xRange = 40...(self.size.width - 40)
+//            let xPos = CGFloat.random(in: xRange)
+//            fruit.position = CGPoint(x: xPos, y: self.size.height)
+//            self.addChild(fruit)
+//            self.fruits.append(fruit)
+//        }
+//
+//        let sequence = SKAction.sequence([wait,spawn])
+//        self.run(SKAction.repeatForever(sequence))
+//    }
+//
+//    private func spawnRotten() {
+//        let wait = SKAction.wait(forDuration: rottenDuration, withRange: 2)
+//        let spawn = SKAction.run {
+//            let rotten = Rotten(color: SKColor.black, size: CGSize(width: 40, height: 40))
+//            let xRange = 40...(self.size.width - 40)
+//            let xPos = CGFloat.random(in: xRange)
+//            rotten.position = CGPoint(x: xPos, y: self.size.height)
+//            self.addChild(rotten)
+//            self.rottens.append(rotten)
+//        }
+//
+//        let sequence = SKAction.sequence([wait,spawn])
+//        self.run(SKAction.repeatForever(sequence))
+//    }
     
     private func removeFruit() {
         var indicesToRemove: [Int] = []
